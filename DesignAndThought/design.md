@@ -18,7 +18,7 @@ the primary goal of managing complexity is to make the system easy to maintain, 
   - Class level
   - Function level
 
-## How to understand proble and division Complexity
+## How to understand problem and division Complexity
 - Find Real world objects and their relationships
 - Form consistent abstractions
 - Map the relationships and objects to the system
