@@ -4,6 +4,9 @@
 # 智能体概述
 
 ## 什么是智能体
+- agents manage how (and how well) information flows through a system.
+- agents can evaluate what they know, decide what they still need, select the right tools, 
+and adjust their strategy when things go wrong.
 
 ## 智能体的构成与运行原理
 
@@ -39,9 +42,108 @@ pip install requests tavily-python openai
 - 向量数据库和图数据库
 - 知识模型
 
+# 上下文工程
+- 什么是上下文工程
+Designing the systems that control what information reaches the model and how it maintains coherence.
+
+Context Engineering is the discipline of designing the architecture that feeds an LLM the right information at the right time. It s not about changing the model itself, but about building the bridges that connect it to the outside world, 
+retrieving external data, connecting it to live tools, and giving it a memory to ground its responses in facts, 
+not just its training data.
+
+它关注的是“在每一次模型调用前，如何以可复用、可度量、可演进的方式，拼装并优化输入上下文”，从而提升正确性、鲁棒性与效率[1][2]。
 
 
+- 为什么需要上下文工程
+大模型具有的问题：
+ It can't answer questions about your private documents. 
+ It has no knowledge of events that happened yesterday. 
+ It confidently makes things up when it doesn't know an answer. 
 
+ Agents are both the architects of their contexts and the users of those contexts.
+However, they need good practices and systems to guide them, because managing context well is difficult, 
+and getting it wrong quickly sabotages everything else the agent can do.
+
+- 如何实现上下文工程
+we’re looking at how we architect entire context systems.
+
+Agents don’t just need memory and tools; 
+they also need to monitor and manage the quality of their own context. 
+That means avoiding overload, detecting irrelevant or conflicting information,pruning or compressing as needed, 
+and keeping their in-context memory clean enough to reason effectively.
+
+Q:LLMs have limited information capacity
+
+Need:
+1、What information should remain active in the context window
+2、What should be stored externally and retrieved when needed
+3、What can be summarized or compressed to save space
+4、How much space to reserve for reasoning and planning
+
+拆分大模型思考步骤：
+一、need to understand user intent:
+Query augmentation (查询增强 )
+One of the most important steps of context engineering is how you prepare and present
+the user s query. Without knowing exactly what the user is asking, the LLM cannot provide an accurate response.
+
+1、Query rewriting transforms the original user query into a more effective version for information retrieval
+2、Query expansion enhances retrieval by generating multiple related queries from a single user input. 
+3、Query decomposition breaks down complex, multi-faceted questions into simpler,
+focused sub-queries that can be processed independently. 
+
+二、 feed them the right external information at the right time （检索）
+The challenge is simple in concept but tricky in practice: a raw dataset of documents is
+almost always too large to fit into an LLM's limited context window (the inputs given to an
+AI model).
+1、we must first break our documents down into smaller, manageable parts
+Chunking Techniques：Fixded-Size、Recursive Chunking、Document-Based Chunking、Semantic Chunking、LLM-Based Chunking、
+Agentic Chunking、Hierarchical Chunking、Late Chunking
+
+三、Prompt engineering is the practice of designing, refining, and optimizing inputs (prompts)
+given to Large Language Models (LLMs) to get your desired output. （提示词技术）
+
+四、Memory
+
+五、Tool
+
+
+Context engineering is made up of the components described in this ebook:
+
+Agents to act as the system's decision-making brain.
+
+Query Augmentation to translate messy human requests into actionable intent.
+
+Retrieval to connect the model to facts and knowledge bases.
+
+Memory to give your system a sense of history and the power to learn.
+
+Tools to give your application hands to interact with live data and APIs.
+
+
+# Agent Skills
+拥有数据库连接能力，不等于智能体知道如何编写高效且安全的SQL；
+能够访问文件系统，不意味着它理解特定项目的代码结构和开发规范。
+这就像给一个新手程序员开通了所有系统的访问权限，但没有提供操作手册和最佳实践。
+What:
+Agent Skills 是一种标准化的程序性知识封装格式
+如果说 MCP 为智能体提供了"手"来操作工具，那么 Skills 就提供了"操作手册"或"SOP（标准作业程序）"，教导智能体如何正确使用这些工具
+
+MCP 的职责：提供标准化的访问接口，让智能体能够"够得着"外部世界的数据和工具
+Skills 的职责：提供领域专业知识，告诉智能体在特定场景下"如何组合使用这些工具"
+
+MCP 定义的是 Agent 与外部工具和数据的连接（USB协议），使 Agent 和外部工具建立连接
+而 Skills 像是软件应用程序，它定义了如何使用这些连接的设备来完成具体任务
+
+Why:
+关注点分离：MCP 专注于"能力"，Skills 专注于"智慧"
+成本优化：渐进式加载大幅降低 token 消耗
+可维护性：业务逻辑（Skills）与基础设施（MCP）解耦
+复用性：同一个 MCP 服务器可以被多个 Skills 使用
+
+How:
+1. 精准的 Description
+2. 模块化与单一职责
+3. 确定性优先原则
+4. 渐进式披露策略
 
 ## Agents require web search because LLMs:
 
